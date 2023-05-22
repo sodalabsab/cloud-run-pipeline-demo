@@ -1,12 +1,26 @@
-FROM python:3.8
+# Use a base image with Java 11 installed
+FROM openjdk:17-slim-buster
 
-ENV SRC_DIR /usr/bin/src/webapp/src
+# Set the working directory to /app
+WORKDIR /app
 
-COPY empty_server.py3 ${SRC_DIR}/
+# Copy the Gradle build files
+COPY build.gradle settings.gradle /app/
 
-WORKDIR ${SRC_DIR}
+COPY src /app/src
 
-ENV PYTHONUNBUFFERED=1
+# Copy the Gradle wrapper files
+COPY gradlew /app/
+COPY gradle /app/gradle
 
-CMD ["python", "empty_server.py3"]
+# Download the Gradle dependencies
+RUN chmod a+x ./gradlew && \
+    ./gradlew --version && \
+    ./gradlew clean build --no-daemon && \
+    cp /app/build/libs/demo*.jar /app/build/demo.jar
 
+# Expose port 8080 or port provided by env var
+EXPOSE ${PORT:-8080}
+
+# Set the command to run the application when the container starts
+CMD ["java", "-jar", "/app/build/demo.jar"]
