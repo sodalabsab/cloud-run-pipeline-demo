@@ -156,7 +156,7 @@ jobs:
         id: end-to-end
         uses: 'wei/curl@v1'
         with: 
-          args: ${{ needs.staging.outputs.staging_url }}
+          args: ${{ needs.deploy-staging.outputs.staging_url }}
 
   deploy-production:
     runs-on: ubuntu-latest
