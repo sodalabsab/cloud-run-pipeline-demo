@@ -187,7 +187,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v0
         with:
           service: ${{ env.SERVICE }}
-          region: ${{ env.REGION }}'
+          region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}
           tag_traffic: 'production=100'
 
