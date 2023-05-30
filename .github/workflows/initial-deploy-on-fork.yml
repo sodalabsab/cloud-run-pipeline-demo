@@ -6,9 +6,9 @@ on:
 
 env:
   PROJECT_ID: ci-cd-course-385719
-  GAR_LOCATION: europe-west1
+  GAR_LOCATION: europe-north1
   SERVICE: demo-${{ github.repository_owner }}
-  REGION: europe-west1
+  REGION: europe-north1
   REPOSITORY: demo
 
 jobs:
