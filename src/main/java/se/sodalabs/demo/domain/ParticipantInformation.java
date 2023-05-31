@@ -1,5 +1,6 @@
 package se.sodalabs.demo.domain;
 
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -8,9 +9,8 @@ public class ParticipantInformation {
   private String id;
   private String name;
 
-  public ParticipantInformation(
-      @Value("${service.identifier}") String id, @Value("${service.name}") String name) {
-    this.id = id;
+  public ParticipantInformation(@Value("${service.name}") String name) {
+    this.id = String.valueOf(UUID.randomUUID());
     this.name = name;
   }
 
