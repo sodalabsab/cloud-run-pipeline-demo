@@ -142,6 +142,8 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}
+          env_vars: |
+            GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}
           tag: 'staging'
           flags: '--max-instances=1 --allow-unauthenticated'
           no_traffic: true
@@ -179,6 +181,8 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}
+          env_vars: |
+            GITHUB_REPOSITORY_OWNER=${{ github.repository_owner }}
           tag: 'production'
           flags: '--max-instances=1 --allow-unauthenticated'
 

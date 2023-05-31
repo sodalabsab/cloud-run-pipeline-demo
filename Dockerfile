@@ -13,7 +13,6 @@ COPY gradlew /app/
 COPY gradle /app/gradle
 
 ENV HUB_ADDRESS=${HUB_ADDRESS:-"https://ci-cd-course-hub-aeyvkm6j4q-lz.a.run.app"}
-ENV GITHUB_REPOSITORY_ID=${GITHUB_REPOSITORY_ID:-"0"}
 ENV GITHUB_REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-"Unknown Participant"}
 
 # Download the Gradle dependencies
