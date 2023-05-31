@@ -17,6 +17,6 @@ public class ApplicationReady {
   @EventListener(ApplicationReadyEvent.class)
   public void registerParticipant() {
     hubService.registerWithHub();
+    hubService.sendHeartbeat();
   }
-
 }
