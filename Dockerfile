@@ -14,6 +14,7 @@ COPY gradle /app/gradle
 
 ENV HUB_ADDRESS=${HUB_ADDRESS:-"https://ci-cd-course-hub-aeyvkm6j4q-lz.a.run.app"}
 ENV GITHUB_REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-"Unknown Participant"}
+ENV DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG:-"untagged"}
 
 # Download the Gradle dependencies
 RUN chmod a+x ./gradlew && \
