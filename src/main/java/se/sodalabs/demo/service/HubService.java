@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.sodalabs.demo.domain.ParticipantInformation;
@@ -27,6 +30,8 @@ public class HubService {
   HttpHeaders headers = new HttpHeaders();
   ObjectMapper objectMapper = new ObjectMapper();
 
+  Logger logger = LoggerFactory.getLogger(HubService.class);
+
   public HubService(ParticipantInformation participantInformation) {
     this.participantInformation = participantInformation;
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -36,6 +41,11 @@ public class HubService {
 
     objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
     objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
+    // The standard JDK HTTP library does not support HTTP PATCH
+    HttpComponentsClientHttpRequestFactory requestFactory =
+        new HttpComponentsClientHttpRequestFactory();
+    restTemplate.setRequestFactory(requestFactory);
   }
 
   public ResponseEntity<String> registerWithHub() {
@@ -43,20 +53,24 @@ public class HubService {
     try {
       payload = objectMapper.writeValueAsString(participantInformation);
       HttpEntity<String> request = new HttpEntity<>(payload, headers);
-      return restTemplate.exchange(hubAdress + "/register", HttpMethod.POST, request, String.class);
+      return restTemplate.exchange(
+          hubAdress + "/api/participant/", HttpMethod.POST, request, String.class);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      logger.error("Could not register with hub: " + e.getMessage());
     }
+    return null;
   }
 
   public ResponseEntity<String> sendHeartbeat() {
     HttpEntity<String> request = new HttpEntity<>(headers);
-    return restTemplate.exchange(hubAdress + "/heartbeat", HttpMethod.PUT, request, String.class);
+    return restTemplate.exchange(
+        hubAdress + "/api/participant/", HttpMethod.PATCH, request, String.class);
   }
 
   public ResponseEntity<String> setNewMood(String mood) {
-    HttpEntity<String> request = new HttpEntity<>(headers);
+    String payload = "\"" + mood + "\"";
+    HttpEntity<String> request = new HttpEntity<>(payload, headers);
     return restTemplate.exchange(
-        hubAdress + "/mood/" + mood, HttpMethod.PUT, request, String.class);
+        hubAdress + "/api/participant/", HttpMethod.PUT, request, String.class);
   }
 }
