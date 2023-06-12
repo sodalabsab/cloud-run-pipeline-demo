@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import se.sodalabs.demo.domain.ParticipantInformation;
 
@@ -46,6 +47,10 @@ public class HubService {
     HttpComponentsClientHttpRequestFactory requestFactory =
         new HttpComponentsClientHttpRequestFactory();
     restTemplate.setRequestFactory(requestFactory);
+  }
+
+  public String getHubAdress() {
+    return hubAdress;
   }
 
   public ResponseEntity<String> registerWithHub() {
