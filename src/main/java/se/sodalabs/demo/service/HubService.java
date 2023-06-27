@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import se.sodalabs.demo.domain.ParticipantInformation;
 
@@ -72,8 +71,8 @@ public class HubService {
         hubAdress + "/api/participant/", HttpMethod.PATCH, request, String.class);
   }
 
-  public ResponseEntity<String> setNewMood(String mood) {
-    String payload = "\"" + mood + "\"";
+  public ResponseEntity<String> setAvailability(String availability) {
+    String payload = "\"" + availability + "\"";
     HttpEntity<String> request = new HttpEntity<>(payload, headers);
     return restTemplate.exchange(
         hubAdress + "/api/participant/", HttpMethod.PUT, request, String.class);
