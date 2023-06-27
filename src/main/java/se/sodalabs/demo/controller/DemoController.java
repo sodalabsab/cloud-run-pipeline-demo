@@ -62,7 +62,7 @@ public class DemoController {
       value = {
         @ApiResponse(responseCode = "204"),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "412",
             description =
                 "The participant has not been registered yet. Call /register first, then try again.")
       })
@@ -82,7 +82,7 @@ public class DemoController {
             responseCode = "400",
             description = "Invalid request. Perhaps you sent something other than free or busy?"),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "412",
             description =
                 "The participant has not been registered yet. Call /register first, then try again.")
       })

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -67,14 +68,29 @@ public class HubService {
 
   public ResponseEntity<String> sendHeartbeat() {
     HttpEntity<String> request = new HttpEntity<>(headers);
-    return restTemplate.exchange(
-        hubAdress + "/api/participant/", HttpMethod.PATCH, request, String.class);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            hubAdress + "/api/participant/", HttpMethod.PATCH, request, String.class);
+    return returnParsedHubResponse(response);
   }
 
   public ResponseEntity<String> setAvailability(String availability) {
     String payload = "\"" + availability + "\"";
     HttpEntity<String> request = new HttpEntity<>(payload, headers);
-    return restTemplate.exchange(
-        hubAdress + "/api/participant/", HttpMethod.PUT, request, String.class);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            hubAdress + "/api/participant/", HttpMethod.PUT, request, String.class);
+    return returnParsedHubResponse(response);
+  }
+
+  private static ResponseEntity<String> returnParsedHubResponse(
+      ResponseEntity<String> responseFromHub) {
+    if (responseFromHub.getStatusCode().is2xxSuccessful()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    } else if (responseFromHub.getStatusCode().is4xxClientError()) {
+      return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+    } else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
