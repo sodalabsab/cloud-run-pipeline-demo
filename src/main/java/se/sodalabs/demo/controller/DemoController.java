@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +62,7 @@ public class DemoController {
       value = {
         @ApiResponse(responseCode = "204"),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "412",
             description =
                 "The participant has not been registered yet. Call /register first, then try again.")
       })
@@ -71,30 +70,27 @@ public class DemoController {
     return hubService.sendHeartbeat();
   }
 
-  @GetMapping("/mood/{mood}")
+  @GetMapping("/availability/{availability}")
   @Operation(
-      summary = "Set a new mood",
-      description = "After registration, trigger setting of a new mood for this participant.")
+      summary = "Set your availability for today",
+      description =
+          "Once you have registered with the hub, use this to signal if you're free or busy today.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200"),
         @ApiResponse(
             responseCode = "400",
-            description =
-                "Invalid request. Perhaps the mood was not recognized by the hub - only certain values are allowed here."),
+            description = "Invalid request. Perhaps you sent something other than free or busy?"),
         @ApiResponse(
-            responseCode = "404",
+            responseCode = "412",
             description =
                 "The participant has not been registered yet. Call /register first, then try again.")
       })
-  public ResponseEntity setMood(
-      @Parameter(
-              description =
-                  "The new mood to set - must be a value allowed by the hub, but try some common adjectives; happy, sad, angry, etc.",
-              example = "happy")
+  public ResponseEntity setAvailability(
+      @Parameter(description = "The availability to set - busy or free.", example = "free")
           @PathVariable
-          String mood) {
-    return hubService.setNewMood(mood);
+          String availability) {
+    return hubService.setAvailability(availability);
   }
 
   @GetMapping("/version")
