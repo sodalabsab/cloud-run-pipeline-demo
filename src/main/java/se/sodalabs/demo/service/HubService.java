@@ -67,6 +67,8 @@ public class HubService {
   }
 
   public ResponseEntity<String> sendHeartbeat() {
+    long timestamp = System.currentTimeMillis();
+    headers.set("heartbeat", String.valueOf(timestamp));
     HttpEntity<String> request = new HttpEntity<>(headers);
     ResponseEntity<String> response =
         restTemplate.exchange(
