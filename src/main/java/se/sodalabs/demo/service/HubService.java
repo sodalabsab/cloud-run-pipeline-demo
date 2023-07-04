@@ -75,11 +75,10 @@ public class HubService {
   }
 
   public ResponseEntity<String> setAvailability(String availability) {
-    String payload = "\"" + availability + "\"";
-    HttpEntity<String> request = new HttpEntity<>(payload, headers);
+    HttpEntity<String> request = new HttpEntity<>(availability, headers);
     ResponseEntity<String> response =
         restTemplate.exchange(
-            hubAdress + "/api/v1/participant/", HttpMethod.PUT, request, String.class);
+            hubAdress + "/api/v2/participant/", HttpMethod.PUT, request, String.class);
     return returnParsedHubResponse(response);
   }
 

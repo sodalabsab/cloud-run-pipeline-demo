@@ -9,6 +9,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.sodalabs.demo.service.HubService;
@@ -70,11 +71,10 @@ public class DemoController {
     return hubService.sendHeartbeat();
   }
 
-  @GetMapping("/availability/{availability}")
+  @PostMapping("/availability/{availability}")
   @Operation(
-      summary = "Set your availability for today",
-      description =
-          "Once you have registered with the hub, use this to signal if you're free or busy today.")
+      summary = "Set your availability for today and tomorrow",
+      description = "Once you have registered with the hub, use this to post your near schedule.")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200"),
@@ -87,7 +87,9 @@ public class DemoController {
                 "The participant has not been registered yet. Call /register first, then try again.")
       })
   public ResponseEntity setAvailability(
-      @Parameter(description = "The availability to set - busy or free.", example = "free")
+      @Parameter(
+              description = "The availability (free or busy) to set for Today and Tomorrow.",
+              example = "{\"Today\": \"busy\", \"Tomorrow\": \"free\"}")
           @PathVariable
           String availability) {
     return hubService.setAvailability(availability);
