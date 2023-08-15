@@ -25,7 +25,7 @@ public class HubService {
   private final ParticipantInformation participantInformation;
 
   @Value("${hub.address}")
-  String hubAdress;
+  String hubAddress;
 
   RestTemplate restTemplate = new RestTemplate();
   HttpHeaders headers = new HttpHeaders();
@@ -49,8 +49,8 @@ public class HubService {
     restTemplate.setRequestFactory(requestFactory);
   }
 
-  public String getHubAdress() {
-    return hubAdress;
+  public String getHubAddress() {
+    return hubAddress;
   }
 
   public ResponseEntity<String> registerWithHub() {
@@ -59,7 +59,7 @@ public class HubService {
       payload = objectMapper.writeValueAsString(participantInformation);
       HttpEntity<String> request = new HttpEntity<>(payload, headers);
       return restTemplate.exchange(
-          hubAdress + "/api/v1/participant/", HttpMethod.POST, request, String.class);
+          hubAddress + "/api/v1/participant/", HttpMethod.POST, request, String.class);
     } catch (JsonProcessingException e) {
       logger.error("Could not register with hub: " + e.getMessage());
     }
@@ -72,7 +72,7 @@ public class HubService {
     HttpEntity<String> request = new HttpEntity<>(headers);
     ResponseEntity<String> response =
         restTemplate.exchange(
-            hubAdress + "/api/v1/participant/", HttpMethod.PATCH, request, String.class);
+            hubAddress + "/api/v1/participant/", HttpMethod.PATCH, request, String.class);
     return returnParsedHubResponse(response);
   }
 
@@ -81,7 +81,7 @@ public class HubService {
     HttpEntity<String> request = new HttpEntity<>(payload, headers);
     ResponseEntity<String> response =
         restTemplate.exchange(
-            hubAdress + "/api/v1/participant/", HttpMethod.PUT, request, String.class);
+            hubAddress + "/api/v1/participant/", HttpMethod.PUT, request, String.class);
     return returnParsedHubResponse(response);
   }
 
