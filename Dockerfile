@@ -8,7 +8,7 @@ ENV GITHUB_REPOSITORY_OWNER=${GITHUB_REPOSITORY_OWNER:-"Unknown Participant"}
 ENV DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG:-"untagged"}
 
 # Copy the application's jar to the container
-COPY ./demo.jar /app/build/demo.jar
+COPY build/libs/demo*.jar /app/build/demo.jar
 
 # Expose port 8081 or port provided by env var
 EXPOSE ${PORT:-8081}

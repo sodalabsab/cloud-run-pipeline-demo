@@ -26,7 +26,8 @@ locally:
 java -jar build/libs/demo-0.0.3-SNAPSHOT.jar # or whatever version we're at
 ```
 
-Alternatively, you can run it in a container:
+Once the jar file is created, you can build a container:
+(it expects the jar file to be in `build/libs`
 
 ```
 docker build -t demo .

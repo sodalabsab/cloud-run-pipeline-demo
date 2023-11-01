@@ -92,9 +92,8 @@ jobs:
           java-version: '17'
           cache: 'gradle'
       - name: Run build with Gradle Wrapper
-        run: |-
-          chmod a+x gradlew && ./gradlew test build
-          cp build/libs/demo*.jar demo.jar
+        run: chmod a+x gradlew && ./gradlew test build
+
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v1'
