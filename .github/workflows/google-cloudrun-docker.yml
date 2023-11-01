@@ -114,6 +114,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          create_credentials_file: false
 
       - name: Deploy to Cloud Run (test)
         id: deploy-test
@@ -151,6 +152,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          create_credentials_file: false
 
       - name: Deploy to Cloud Run
         id: deploy-prod
