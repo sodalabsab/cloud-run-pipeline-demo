@@ -65,12 +65,6 @@ jobs:
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v3
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          cache: 'gradle'
       - name: Run build with Gradle Wrapper
         run: chmod a+x gradlew && ./gradlew test build
 
