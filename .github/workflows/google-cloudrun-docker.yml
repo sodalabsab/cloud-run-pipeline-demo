@@ -7,7 +7,7 @@
 # 3. Build a docker container
 # 4. Publish it to Google Artifact Registry
 # 5. Deploy it to Cloud Run with a 'test' tag, accepting no traffic
-# 6. Run end-to-end tests towards the test version
+# 6. Run tests and verify the version
 # 7. Deploy 'production' version accepting all traffic
 #
 # To configure this workflow:
@@ -118,7 +118,7 @@ jobs:
     outputs:
       staging_url: ${{ steps.deploy-test.outputs.url }}
     steps:
-      - name: Checkout #Needed to setup the workspace to store the credentials file
+      - name: Checkout #Needed to set up the workspace to store the credentials file
         uses: actions/checkout@v3
       - name: Google Auth
         id: auth
@@ -143,21 +143,21 @@ jobs:
       - name: Show Output
         run: echo ${{ steps.deploy-test.outputs.url }}
   
-  end-to-end-test:
+  test-and-verify:
     runs-on: ubuntu-latest
     needs: deploy-test
     steps:
-      - name: End-to-End Tests
-        id: end-to-end
+      - name: Test and verify
+        id: test-and-verify
         uses: 'wei/curl@v1'
         with: 
           args: ${{ needs.deploy-staging.outputs.staging_url }}
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: end-to-end-test
+    needs: test-and-verify
     steps:
-      - name: Checkout #Needed to setup the workspace to store the credentials file
+      - name: Checkout #Needed to set up the workspace to store the credentials file
         uses: actions/checkout@v3
       - name: Google Auth
         id: auth
