@@ -6,7 +6,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
-import se.sodalabs.demo.service.ErrorHandler;
 import se.sodalabs.demo.service.HubService;
 
 @Component
@@ -23,16 +22,14 @@ public class ApplicationReady {
   @EventListener(ApplicationReadyEvent.class)
   public void registerParticipant() {
     try {
-      hubService.registerWithHub();
-      hubService.sendHeartbeat();
+      hubService.registerNewParticipant();
     } catch (ResourceAccessException e) {
       logger.error(
           "Failed to reach hub at "
-              + this.hubService.getHubAdress()
+              + this.hubService.getHubAddress()
               + "; will continue, but you need to make sure that it is available "
-              + "(and that the environment variable HUB_ADDRESS is pointing to the "
-              + "correct place) and register this demo application manually by calling "
-              + "GET /register.");
+              + "(or change the environment variable HUB_ADDRESS to point to the "
+              + "correct place).");
     }
   }
 }

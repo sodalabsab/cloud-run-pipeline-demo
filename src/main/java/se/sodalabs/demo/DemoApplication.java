@@ -1,19 +1,16 @@
 package se.sodalabs.demo;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.servers.Server;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@OpenAPIDefinition(
-		servers = { @Server(url = "/", description = "Default Server URL") }
-)
-public class DemoApplication {
+@Theme(value = "participant", variant = Lumo.DARK)
+public class DemoApplication implements AppShellConfigurator {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
 }

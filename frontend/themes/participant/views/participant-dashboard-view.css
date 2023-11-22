@@ -1,0 +1,37 @@
+.participant-dashboard-view {
+}
+
+.participant-dashboard-view .dashboard-column {
+  width: 35%;
+}
+
+.participant-dashboard-view .name {
+  margin-top: var(--lumo-space-xl);
+}
+
+.participant-dashboard-view .button {
+  margin-top: var(--lumo-space-m);
+  margin-bottom: var(--lumo-space-m);
+}
+
+.participant-dashboard-view .id {
+  color: var(--lumo-tertiary-text-color);
+  font-size: var(--lumo-font-size-s);
+  font-weight: normal;
+  margin-top: var(--lumo-space-s);
+  margin-bottom: var(--lumo-space-l);
+}
+
+.participant-dashboard-view .exercise-container {
+  margin-top: var(--lumo-space-l);
+  margin-bottom: var(--lumo-space-l);
+}
+
+.participant-dashboard-view .radio-button-group {
+  text-align: center;
+}
+
+.participant-dashboard-view .radio-button-group > vaadin-radio-button {
+  margin-left: var(--lumo-space-m);
+  margin-right: var(--lumo-space-m);
+}
