@@ -2,9 +2,10 @@ package se.sodalabs.demo.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,26 +18,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import se.sodalabs.demo.domain.ParticipantInformation;
+import se.sodalabs.demo.domain.ParticipantDTO;
 
 @Service
 public class HubService {
 
-  private final ParticipantInformation participantInformation;
-
   @Value("${hub.address}")
-  String hubAdress;
+  String hubAddress;
+
+  @Value("${service.tag}")
+  String id;
+
+  @Value("${service.name}")
+  String name;
 
   RestTemplate restTemplate = new RestTemplate();
   HttpHeaders headers = new HttpHeaders();
   ObjectMapper objectMapper = new ObjectMapper();
 
   Logger logger = LoggerFactory.getLogger(HubService.class);
+  private String lastRegisteredAt = "n/a";
 
-  public HubService(ParticipantInformation participantInformation) {
-    this.participantInformation = participantInformation;
+  public HubService() {
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("participantId", participantInformation.getId());
 
     restTemplate.setErrorHandler(new ErrorHandler());
 
@@ -49,40 +53,40 @@ public class HubService {
     restTemplate.setRequestFactory(requestFactory);
   }
 
-  public String getHubAdress() {
-    return hubAdress;
+  public String getHubAddress() {
+    return hubAddress;
   }
 
-  public ResponseEntity<String> registerWithHub() {
-    String payload;
-    try {
-      payload = objectMapper.writeValueAsString(participantInformation);
-      HttpEntity<String> request = new HttpEntity<>(payload, headers);
-      return restTemplate.exchange(
-          hubAdress + "/api/v1/participant/", HttpMethod.POST, request, String.class);
-    } catch (JsonProcessingException e) {
-      logger.error("Could not register with hub: " + e.getMessage());
-    }
-    return null;
+  public ResponseEntity<String> registerNewParticipant() {
+    ParticipantDTO participantDTO = new ParticipantDTO(id, name);
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Content-Type", "application/json");
+    HttpEntity<ParticipantDTO> request = new HttpEntity<>(participantDTO, headers);
+
+    this.lastRegisteredAt =
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("y-MM-dd HH:mm:ss"));
+    return restTemplate.exchange(
+        hubAddress + "/api/v1/participant/", HttpMethod.POST, request, String.class);
   }
 
-  public ResponseEntity<String> sendHeartbeat() {
-    long timestamp = System.currentTimeMillis();
-    headers.set("heartbeat", String.valueOf(timestamp));
-    HttpEntity<String> request = new HttpEntity<>(headers);
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            hubAdress + "/api/v1/participant/", HttpMethod.PATCH, request, String.class);
-    return returnParsedHubResponse(response);
+  public ResponseEntity<String> unregisterParticipant() {
+    HttpHeaders headers = new HttpHeaders();
+    HttpEntity<ParticipantDTO> request = new HttpEntity<>(headers);
+
+    return restTemplate.exchange(
+        hubAddress + "/api/v1/participant/" + id, HttpMethod.DELETE, request, String.class);
   }
 
-  public ResponseEntity<String> setAvailability(String availability) {
-    String payload = "\"" + availability + "\"";
-    HttpEntity<String> request = new HttpEntity<>(payload, headers);
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            hubAdress + "/api/v1/participant/", HttpMethod.PUT, request, String.class);
-    return returnParsedHubResponse(response);
+  public ResponseEntity<String> sendFeedback(int happinessScore) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Content-Type", "application/json");
+    HttpEntity<Integer> request = new HttpEntity<>(happinessScore, headers);
+
+    return restTemplate.exchange(
+        hubAddress + "/api/v1/participant/" + id + "/feedback",
+        HttpMethod.POST,
+        request,
+        String.class);
   }
 
   private static ResponseEntity<String> returnParsedHubResponse(
@@ -94,5 +98,9 @@ public class HubService {
     } else {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public String getLastRegisteredAt() {
+    return lastRegisteredAt;
   }
 }
