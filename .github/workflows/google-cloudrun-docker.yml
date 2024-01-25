@@ -48,6 +48,7 @@ name: Build, Test and Deploy to Cloud Run
 run-name: Build, Test and Deploy to Cloud Run
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "main"
