@@ -151,7 +151,7 @@ jobs:
         id: test-and-verify
         uses: 'wei/curl@v1'
         with: 
-          args: ${{ needs.deploy-staging.outputs.staging_url }}
+          args: ${{ needs.deploy-test.outputs.url }}
 
   deploy-production:
     runs-on: ubuntu-latest
