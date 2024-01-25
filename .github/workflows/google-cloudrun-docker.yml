@@ -128,7 +128,7 @@ jobs:
 
       - name: Deploy to Cloud Run (test)
         id: deploy-test
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
@@ -167,7 +167,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         id: deploy-prod
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
@@ -180,7 +180,7 @@ jobs:
 
       - name: Enable traffic in production
         id: prod-traffic
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
