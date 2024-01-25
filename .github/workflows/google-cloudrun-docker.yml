@@ -48,6 +48,7 @@ name: Build, Test and Deploy to Cloud Run
 run-name: Build, Test and Deploy to Cloud Run
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "main"
@@ -138,7 +139,6 @@ jobs:
             DOCKER_IMAGE_TAG=${{ env.SERVICE }}:${{ github.sha }}
           tag: 'staging'
           flags: '--max-instances=1 --allow-unauthenticated'
-          no_traffic: true
 
       - name: Show Output
         run: echo ${{ steps.deploy-test.outputs.url }}
@@ -151,7 +151,7 @@ jobs:
         id: test-and-verify
         uses: 'wei/curl@v1'
         with: 
-          args: ${{ needs.deploy-staging.outputs.staging_url }}
+          args: ${{ needs.deploy-test.outputs.url }}
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -177,15 +177,6 @@ jobs:
             DOCKER_IMAGE_TAG=${{ env.SERVICE }}:${{ github.sha }}
           tag: 'production'
           flags: '--max-instances=1 --allow-unauthenticated'
-
-      - name: Enable traffic in production
-        id: prod-traffic
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: ${{ env.SERVICE }}
-          region: ${{ env.REGION }}
-          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}
-          tag_traffic: 'production=100'
 
       - name: Show Output
         run: echo ${{ steps.deploy-prod.outputs.url }}
