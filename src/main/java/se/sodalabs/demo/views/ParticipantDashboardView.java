@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import se.sodalabs.demo.service.HubService;
 
-@PageTitle("Feedback Survey test")
+@PageTitle("Feedback Survey")
 @Route(value = "/")
 public class ParticipantDashboardView extends VerticalLayout {
 
