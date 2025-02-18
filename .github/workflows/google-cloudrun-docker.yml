@@ -144,7 +144,7 @@ jobs:
         run: echo ${{ steps.deploy-test.outputs.url }}
   
   test-and-verify:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: deploy-test
     steps:
       - name: Test and verify
