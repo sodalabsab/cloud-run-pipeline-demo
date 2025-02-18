@@ -30,25 +30,25 @@ This course will guide you through setting up and using a pipeline GitHub Action
    - Configure ssh access to GitHub by [following this instruction](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
 4. **Fork the course Repository into your GitHub Account**
-   - Go to [the course reporitory](https://github.com/sodalabsab/scalingcloud.git)
+   - Go to [the course reporitory](https://github.com/sodalabsab/cloud-run-pipeline-demo.git)
    - Select "Fork" to create your own disconnected version of the course code repository
-   - Name the repository "scalecloud" click on "Create fork"
+   - Name the repository "cicdcourse" click on "Create fork"
 
 5. **Download the repository localy**
    - Go to the newly created repo in your github account and click on the green "<>Code" button. Copy the SSH URL and open a comand shell on your computer. Paste in this command to create a local repository (connected to the github repository)
      ```bash
-     git clone git@github.com:<your-username>/scalecloud.git
+     git clone git@github.com:<your-username>/cicdcourse.git
      ```
    - Replace `<your-username>` with your GitHub username.
    - Change directory into the repo:
      ```bash
-     cd scalecloud
+     cd cicdcourse
      ```
    - Verify the repo with the command
      ```bash
-     git remove -v
+     git remote -v
      ```  
-     You sould see something like: `origin	git@github.com:<your usernam>/scalingcloud.git (push)`
+     You sould see something like: `origin	git@github.com:<your usernam>/cicdcourse.git (push)`
 
 6. **Docker (requires local admin)**
    - Donload and install from: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
@@ -60,43 +60,65 @@ This course will guide you through setting up and using a pipeline GitHub Action
 7. **Open the code in VS Code**
    - Start VS Code and open the directory by selecting "Open folder..." from the File meny
 
+### This is the end of the first setup session
+Now the course will continue
+
+
 # Setup 2 - move to the cloud
 
-This part explores some of the avaliable tools to build, deploy and monitor applications in Azure. There are a few things required to be setup to be able to run the labs. 
+This part explores some of the avaliable tools to build, deploy and monitor applications in Google. There are a few things required to be setup to be able to run the labs. 
 
-1. **Azure Account**
-   - Sign up: [https://azure.microsoft.com/free/](https://azure.microsoft.com/free/)
-   - Ensure your subscription is active (you should be able to create a free tier subscriptioin)
+1# Setting up your Google Cloud Environment
 
-2. **(Optional) Azure CLI**
-   - Install from: [https://docs.microsoft.com/en-us/cli/azure/install-azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-   - Log in to your Azure account:
-     ```bash
-     az login
-     ```
+This guide outlines the steps to set up your Google Cloud environment, including creating an account and configuring the Google Cloud CLI.
 
-7. **(Optional) Bicep CLI**
-   - Install Bicep using Azure CLI:
-     ```bash
-     az bicep install
-     ```
-   - Verify Bicep installation:
-     ```bash
-     az bicep version
-     ```
+## 1. Google Cloud Account
 
-## GitHub actions Setup for Azure Bicep Deployment
+- **Sign up for a Google Cloud Free Trial (or Free Tier):** [https://console.cloud.google.com/freetrial](https://console.cloud.google.com/freetrial)
+
+- **Important:** The free trial gives you credits for a limited time.
+
+- **Verify your account:** Google will likely require you to verify your identity and payment information (even for the free tier).
+
+- **Create a Project:** Create a project in the Google Cloud Console. Projects are the way you organize your Google Cloud resources.
+
+## 2. (Optional) Google Cloud CLI (gcloud)
+
+- **Install the gcloud CLI:** [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install) Follow the instructions for your operating system.
+
+- **Initialize the gcloud CLI:** After installation, you'll need to initialize it:
+
+  ```bash
+  gcloud init
+  ```
+This will guide you through the process of selecting a project (if you have multiple) and setting up your gcloud configuration.
+
+**Log in to your Google Account:**
+
+  ```bash
+  gcloud auth login
+  ```
+This will open a browser window where you can authenticate with your Google Cloud account.
+
+Set the active project (Important): If you've created multiple projects, you need to tell gcloud which one to use:
+
+  ```bash
+  gcloud config set project YOUR_PROJECT_ID
+  ```
+Replace YOUR_PROJECT_ID with the actual ID of your Google Cloud project. You can find the Project ID in the Google Cloud Console.
+
+## GitHub actions Setup for Google Artifact and Cloud Run Deployment
 
 ### Configure GitHub Secrets
 
-You need to configure the following GitHub Secrets in your repository for secure deployment. These secrets are referenced in the actions workflows and in bicep files.
+You need to configure the following GitHub Secrets in your repository for secure deployment. These secrets are referenced in the actions workflows when pushing docker image and deploying to Google Cloud Run.
 
 #### Steps to Configure Secrets
 
 1. Go to your repository's **Settings**.
 2. Navigate to **Secrets and variables** > **Actions**.
 3. Add the following secrets:
-   - `AZURE_SUBSCRIPTION_ID`: Your Azure subscription ID.
+   - `': Your Azure subscription ID.
    - `AZURE_RESOURCE_GROUP`: Provide a suitable name of the resource groups that will be created and used for the labs.
    - `DOCKERHUB_PASSWORD`: Your password to dockerhub.com (used for rebuilding and pushing a new version of `my-website`) 
    - `DOCKERHUB_IMAGE`: The name of your image that ws pushed to dockerhub.com in lab1. It will be used as input into the bicep file that sets up the labs in azure.  
