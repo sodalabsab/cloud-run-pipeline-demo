@@ -81,7 +81,7 @@ jobs:
       contents: 'read'
       id-token: 'write'
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build-and-unittest
     steps:
       - name: Checkout
@@ -144,7 +144,7 @@ jobs:
         run: echo ${{ steps.deploy-test.outputs.url }}
   
   test-and-verify:
-    runs-on: self-hosted
+    runs-on: ubunti-latest
     needs: deploy-test
     steps:
       - name: Test and verify
